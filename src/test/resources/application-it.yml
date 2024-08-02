@@ -1,0 +1,4 @@
+app:
+  mongodb:
+    encryption:
+      provider: local

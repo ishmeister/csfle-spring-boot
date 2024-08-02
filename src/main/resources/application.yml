@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: csfle-spring-boot
+
+app:
+  mongodb:
+    encryption:
+      provider: aws
+      aws-region: eu-west-2
+      aws-kms-key-id: key-id
+      key-vault-namespace: example.key_vault
+      key-vault-alias: example
+      aws-access-key-id: replace-with-secret
+      aws-secret-access-key: replace-with-secret
