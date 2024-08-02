@@ -10,5 +10,5 @@ app:
       aws-kms-key-id: key-id
       key-vault-namespace: example.key_vault
       key-vault-alias: example
-      aws-access-key-id: replace-with-secret
-      aws-secret-access-key: replace-with-secret
+      # aws-access-key-id: replace-with-secret
+      # aws-secret-access-key: replace-with-secret

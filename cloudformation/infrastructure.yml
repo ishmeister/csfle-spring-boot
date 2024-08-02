@@ -1,0 +1,49 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: KMS infrastructure
+Resources:
+
+  MongoClientEncryptionMasterKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: Mongo Client Encryption Master Key
+      KeyUsage: ENCRYPT_DECRYPT
+      KeyPolicy:
+        Version: '2012-10-17'
+        Id: MongoClientEncryptionMasterKeyPolicy
+        Statement:
+          - Sid: Allow access for Key Administrators
+            Effect: Allow
+            Principal:
+              AWS:
+                - !Join  [ ':', [ 'arn:aws:iam:', Ref: 'AWS::AccountId', 'root' ] ]
+                - !Join  [ ':', [ 'arn:aws:iam:', Ref: 'AWS::AccountId', 'role/super-admin-role' ] ]
+            Action:
+              - kms:*
+            Resource: "*"
+
+  MongoClientEncryptionMasterKeyAlias:
+    Type: 'AWS::KMS::Alias'
+    Properties:
+      AliasName: 'alias/mongo-client-encryption-master-key'
+      TargetKeyId: !Ref MongoClientEncryptionMasterKey
+
+  MongoClientEncryptionUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: 'mongo-client-encryption-user'
+
+  MongoClientEncryptionMasterKeyAccessPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: MongoClientEncryptionMasterKeyAccessPolicy
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: AllowEncryptDecrypt
+            Effect: Allow
+            Action:
+              - kms:Encrypt
+              - kms:Decrypt
+            Resource: !GetAtt MongoClientEncryptionMasterKey.Arn
+      Users:
+        - Ref: MongoClientEncryptionUser
