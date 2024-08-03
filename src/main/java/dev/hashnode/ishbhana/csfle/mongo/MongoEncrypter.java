@@ -25,7 +25,6 @@ public class MongoEncrypter {
 
     public void encrypt(String key, Document document) {
         Optional.ofNullable(document.get(key))
-                .filter(String.class::isInstance)
                 .map(String.class::cast)
                 .map(BsonString::new)
                 .ifPresent(bson -> document.replace(key, encrypt(bson)));
@@ -33,7 +32,6 @@ public class MongoEncrypter {
 
     public void decrypt(String key, Document document) {
         Optional.ofNullable(document.get(key))
-                .filter(Binary.class::isInstance)
                 .map(Binary.class::cast)
                 .map(this::decrypt)
                 .ifPresent(bson -> document.replace(key, bson.asString().getValue()));
